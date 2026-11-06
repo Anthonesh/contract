@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#181521">
+  <meta name="description" content="Un parchemin interdit, un sortilège douteux et un pacte franchement indécent à signer au doigt.">
+  <title>Le Pacte des Intentions Scandaleuses</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+    :root{
+      --night:#171521; --night2:#221a2b; --wine:#57253f; --gold:#d9b97c; --pale:#f4e6c7;
+      --ink:#3b2c2a; --paper:#f1dfbb; --muted:#bfb1bf; --edge:rgba(232,201,151,.22);
+      --body:'DM Sans',Arial,sans-serif; --serif:'Cormorant Garamond',Georgia,serif;
+    }
+    * { box-sizing:border-box }
+    html {scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#3e283f 0%,transparent 50%),linear-gradient(155deg,#211a2c,var(--night) 58%,#241928);color:#f5e8e7;font-family:var(--body);overflow-x:hidden}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(circle,#dfc29a 0.65px,transparent 0.9px);background-size:90px 90px;opacity:.12}
+    button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,canvas:focus-visible{outline:3px solid #f2c982;outline-offset:4px}
+    .toolbar{position:fixed;z-index:50;top:15px;right:16px;display:flex;gap:8px;align-items:center}
+    .tool-btn{border:1px solid var(--edge);background:rgba(28,23,34,.87);color:#f5e8e7;padding:10px 13px;border-radius:999px;letter-spacing:.01em;font-size:12px;backdrop-filter:blur(12px)}
+    .stage{display:none;min-height:100svh;position:relative}.stage.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .eyebrow{text-transform:uppercase;letter-spacing:.24em;font-size:10px;font-weight:700;color:var(--gold)}
+    .stage-intro{padding:75px 23px 55px;text-align:center}
+    .intro-frame{width:min(100%,730px);margin:auto;border:1px solid rgba(220,182,126,.23);padding:clamp(32px,7vw,70px) clamp(20px,6vw,50px);border-radius:240px 240px 28px 28px;background:linear-gradient(155deg,rgba(99,57,80,.15),rgba(30,23,35,.75));box-shadow:0 32px 100px rgba(0,0,0,.32),inset 0 0 0 9px rgba(230,194,136,.025)}
+    .sigil{position:relative;display:grid;place-items:center;width:145px;height:145px;margin:15px auto 24px;border:1px solid rgba(228,192,133,.46);border-radius:50%;background:radial-gradient(circle,rgba(216,168,112,.13),transparent 67%)}
+    .sigil::before,.sigil::after{content:"";position:absolute;inset:11px;border:1px solid rgba(218,185,124,.17);border-radius:50%}.sigil::after{inset:24px}
+    .wand{font-size:70px;line-height:1;transform:rotate(-21deg);filter:sepia(.25);position:relative;z-index:1}
+    .spell-wave{position:absolute;inset:7px;border-radius:50%;border:1px solid rgba(237,204,151,.55);opacity:0;transform:scale(.86)}
+    .casting .spell-wave{animation:wave 1.15s ease-out 1}
+    @keyframes wave{0%{opacity:0;transform:scale(.82)}30%{opacity:.55}100%{opacity:0;transform:scale(1.26)}}
+    h1,h2,h3,p{margin-top:0}
+    .intro-title{font-family:var(--serif);font-weight:600;font-size:clamp(47px,10vw,82px);line-height:.96;letter-spacing:-.035em;margin:16px auto 21px;max-width:600px}
+    .intro-title em{font-style:italic;font-weight:400;color:#e2b98a}
+    .intro-copy{max-width:480px;margin:0 auto 31px;line-height:1.8;color:#d7c5d1;font-size:14px}
+    .button-main{border:1px solid #f5d79f;border-radius:999px;background:linear-gradient(120deg,#e6c58d,#cda467);color:#31232b;padding:16px 28px;min-height:52px;box-shadow:0 8px 35px rgba(217,175,108,.15);font-weight:700;letter-spacing:.015em;transition:transform .25s ease,filter .25s ease}
+    .button-main:hover{transform:translateY(-2px);filter:brightness(1.05)}.button-main:disabled{opacity:.55;cursor:not-allowed;transform:none}
+    .intro-foot{margin-top:21px;color:#ac9fac;font-size:11px;line-height:1.5}
+    .spell-text{font-family:var(--serif);font-style:italic;color:#e8c899;min-height:38px;font-size:28px;margin-top:11px;opacity:0;transition:opacity .6s ease}
+    .spell-text.revealed{opacity:1}
+    .stage-scroll{padding:80px 20px 40px;text-align:center}
+    .scene-frame{width:min(100%,640px);padding:clamp(27px,5vw,54px) 24px 42px;border-radius:22px;border:1px solid var(--edge);background:rgba(35,26,40,.62);box-shadow:0 24px 110px rgba(0,0,0,.2)}
+    .scroll-illustration{width:min(92%,370px);height:178px;margin:17px auto 28px;position:relative;filter:drop-shadow(0 14px 18px rgba(0,0,0,.25))}
+    .scroll-core{position:absolute;inset:38px 28px;border-radius:8px;background:linear-gradient(95deg,#c7a77a 0%,#f4e3ba 13%,#ead3a3 48%,#f0ddb3 85%,#bd9169 100%);box-shadow:inset 0 0 35px rgba(89,53,32,.12),0 2px 9px rgba(0,0,0,.3)}
+    .scroll-roll{position:absolute;top:20px;bottom:20px;width:47px;border-radius:45%;background:linear-gradient(90deg,#9e7754,#e5c9a0 27%,#f4e0bd 65%,#a47a52);box-shadow:inset 4px 0 11px rgba(63,41,29,.2),5px 4px 12px rgba(0,0,0,.2)}
+    .scroll-roll.left{left:6px}.scroll-roll.right{right:6px;transform:scaleX(-1)}
+    .scroll-ribbon{position:absolute;z-index:2;left:calc(50% - 28px);top:28px;width:56px;height:123px;background:linear-gradient(90deg,#702f45,#9c4962 50%,#6e2840);box-shadow:0 3px 8px rgba(0,0,0,.12)}
+    .scroll-ribbon::after{content:'✧';display:grid;place-items:center;position:absolute;top:calc(50% - 21px);left:7px;width:42px;height:42px;border-radius:50%;background:#c69c61;border:3px solid #885a48;color:#57283d;font:29px var(--serif);box-shadow:0 2px 7px rgba(0,0,0,.25)}
+    .scene-title{font:600 clamp(35px,7vw,54px)/1.05 var(--serif);margin:10px 0}
+    .scene-copy{color:#cbbbcc;line-height:1.8;font-size:14px;margin:0 auto 25px;max-width:360px}
+    .stage-contract{padding:70px 16px 65px;justify-content:flex-start!important}
+    .contract-wrap{max-width:1030px;width:100%;display:grid;grid-template-columns:minmax(0,1fr) 248px;align-items:start;gap:22px;margin:auto}
+    .contract-header{grid-column:1/-1;text-align:center;margin-bottom:5px}
+    .contract-header h2{font:600 clamp(30px,6vw,48px)/1.05 var(--serif);margin:7px auto;color:#eed3a2}
+    .contract-header p{color:#bfb1c0;font-size:12px;line-height:1.7}
+    .parchment{position:relative;background:linear-gradient(105deg,rgba(133,94,53,.14),transparent 16%,transparent 86%,rgba(117,71,43,.16)),repeating-linear-gradient(0deg,rgba(119,76,44,.018),rgba(119,76,44,.018) 1px,transparent 1px,transparent 6px),var(--paper);color:var(--ink);padding:clamp(29px,5.5vw,60px);border-radius:9px;box-shadow:0 25px 70px rgba(0,0,0,.42),inset 0 0 28px rgba(103,68,34,.15);border:1px solid #bda27b}
+    .parchment::before,.parchment::after{content:"";position:absolute;left:14px;right:14px;height:13px;pointer-events:none;border:1px solid rgba(121,86,50,.17)}.parchment::before{top:11px;border-bottom:0;border-radius:50% 50% 0 0}.parchment::after{bottom:11px;border-top:0;border-radius:0 0 50% 50%}
+    .doc-flourish{font:30px var(--serif);text-align:center;color:#89553e;letter-spacing:.15em;margin-bottom:8px}
+    .doc-label{font-size:10px;text-transform:uppercase;letter-spacing:.25em;text-align:center;color:#976647;font-weight:700}
+    .doc-title{font:600 clamp(34px,6vw,58px)/.97 var(--serif);text-align:center;color:#4b2934;margin:10px auto 7px}
+    .doc-subtitle{text-align:center;font:italic 20px var(--serif);color:#785545;margin-bottom:25px}
+    .doc-rule{width:88px;height:1px;background:#ab8063;margin:23px auto 26px}
+    .party-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:21px}
+    .party-fields label{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:#765544;display:flex;flex-direction:column;gap:7px;font-weight:700}
+    .party-fields input{width:100%;background:rgba(255,249,231,.58);border:1px solid rgba(104,73,53,.32);border-radius:5px;padding:12px 10px;min-width:0;color:#402a2f;outline-color:#8a4b59}
+    .doc-intro{font:20px/1.45 var(--serif);text-align:center;margin:10px auto 22px;max-width:520px}
+    .article{padding:15px 0 12px;border-top:1px solid rgba(115,73,49,.18)}
+    .article h3{font:700 22px/1.2 var(--serif);color:#632f3e;margin:0 0 7px}.article p{font:18px/1.52 var(--serif);margin:0;color:#4e3d35}
+    .bold-term{font-weight:700;color:#5a2e3b}
+    .doc-epilogue{font:italic 19px/1.4 var(--serif);text-align:center;color:#704c43;margin:18px 0 24px}
+    .signature-area{border-top:1px double #967251;padding-top:24px}
+    .signature-title{text-align:center;font:700 25px var(--serif);color:#673c3d;margin-bottom:13px}
+    .oath-signature{display:grid;grid-template-columns:1fr 1.25fr;gap:16px;align-items:center}
+    .oath{font:italic 23px/1.1 var(--serif);color:#69313e;text-align:center;padding:12px 3px}
+    .signature-box{background:rgba(255,251,240,.6);border:1px solid #b99d7b;border-radius:5px;padding:8px;min-width:0}
+    .signature-box canvas{width:100%;height:133px;display:block;touch-action:none;cursor:crosshair;background:transparent}
+    .signature-box img{width:100%;height:133px;object-fit:contain;display:none}
+    .signature-hint{font:12px var(--body);text-align:center;color:#81644f;margin:5px}
+    .signature-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
+    .btn-ink{color:#fdf0d9;background:#653848;border:1px solid #653848;border-radius:6px;padding:12px 15px;font-weight:700;font-size:12px}
+    .btn-clear{color:#654a42;background:transparent;border:1px solid rgba(99,66,49,.35);border-radius:6px;padding:11px 14px;font-size:12px}
+    .sig-error{font-size:12px;color:#90263b;min-height:14px;margin-top:10px;text-align:center}
+    .date-line{font:17px var(--serif);text-align:right;margin-top:16px;color:#6e5645}
+    .sealed-stamp{display:none;margin:20px auto 0;align-items:center;justify-content:center;width:108px;height:108px;border:6px double #803d4b;border-radius:50%;text-transform:uppercase;letter-spacing:.08em;font-size:15px;line-height:1.2;color:#803d4b;font-weight:700;text-align:center;transform:rotate(-13deg)}
+    .sealed-stamp.visible{display:flex}
+    .signature-actions.signed{display:none}
+    .side-panel{position:sticky;top:70px;display:flex;flex-direction:column;gap:14px}
+    .side-card{background:rgba(36,26,41,.85);border:1px solid var(--edge);border-radius:14px;padding:18px;box-shadow:0 15px 40px rgba(0,0,0,.14)}
+    .side-card h3{font:600 24px var(--serif);color:#f1d4a3;margin:0 0 8px}.side-card p{font-size:12px;color:#bfb2bf;line-height:1.7;margin:0 0 13px}
+    .music-frame{display:block;border:0;width:100%;height:204px;border-radius:8px;background:#15121b}
+    .music-link{color:#e8c999;display:inline-block;font-size:11px;margin-top:10px;text-decoration:underline;text-underline-offset:4px}
+    .music-option{margin-top:12px;width:100%;padding:10px 8px;background:rgba(230,197,142,.09);color:#f5d8a0;border:1px solid var(--edge);border-radius:8px;font-size:11px;text-align:left}
+    .music-status{border:1px solid var(--edge);border-radius:8px;background:rgba(218,178,115,.08);padding:13px;color:#e2cbad;font-size:12px;line-height:1.7}
+    .music-status a{color:#e5c48e}
+    .voice-hint{min-height:16px;color:#bcaaba;font-size:11px;margin:3px auto 0}
+    .counterpart{margin:22px 0 19px;padding:19px 17px 17px;background:rgba(116,63,65,.09);border:1px solid rgba(126,66,75,.32);border-radius:8px;text-align:center}
+    .counterpart-label{letter-spacing:.16em;color:#7c4d50;font-size:10px;font-weight:700;margin-bottom:9px}
+    .counterpart p{font:700 22px/1.33 var(--serif);color:#642e41;margin:0 0 8px}
+    .counterpart small{color:#866453;font:italic 14px var(--serif)}
+    .side-badge{display:flex;gap:8px;align-items:flex-start;color:#e1caac;font-size:11px;line-height:1.6}
+    .finished-actions{display:none;gap:9px;flex-direction:column}.finished-actions.visible{display:flex}
+    .finished-actions button{width:100%}
+    .splash{position:fixed;inset:0;z-index:100;display:none;place-items:center;pointer-events:none;background:rgba(23,19,30,.16)}
+    .splash.visible{display:grid;animation:splash-out 2.5s ease-in-out forwards}
+    .splash svg{width:min(100vw,720px);height:auto;max-height:90svh;opacity:.9;filter:drop-shadow(0 7px 20px rgba(24,19,33,.09));transform:scale(.96);animation:splash-arrive 1.1s ease-out both}
+    .splash-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-4deg);font:700 clamp(20px,5vw,45px)/1 var(--serif);white-space:nowrap;color:#6b3f49;text-shadow:0 1px #f1e5d6;opacity:0;animation:label-in 2.2s ease-in-out forwards}
+    @keyframes splash-arrive{from{opacity:0;transform:scale(.92)}to{opacity:.92;transform:scale(1)}}
+    @keyframes splash-out{0%{opacity:0}25%{opacity:1}70%{opacity:1}100%{opacity:0}}
+    @keyframes label-in{0%,25%{opacity:0}45%,70%{opacity:1}100%{opacity:0}}
+    .after-toast{display:none;margin:18px auto 0;border:1px solid rgba(109,72,50,.35);border-radius:6px;padding:13px;text-align:center;color:#5c3840;background:#ead4ab;font:italic 21px var(--serif)}
+    .after-toast.visible{display:block}
+    .footer-note{color:#8f8190;font-size:11px;text-align:center;padding:30px 15px;line-height:1.6}
+    @media (max-width:800px){.contract-wrap{grid-template-columns:1fr;max-width:680px}.contract-header{grid-column:1}.side-panel{position:static;grid-row:2}.parchment{grid-row:3}.side-panel .side-card:nth-child(2){display:none}.music-frame{height:204px}.side-card{padding:13px}.side-card h3{font-size:21px}.stage-contract{padding-top:78px}}
+    @media (max-width:470px){.toolbar{right:10px;top:9px}.tool-btn{font-size:10px;padding:8px 10px}.intro-frame{border-radius:150px 150px 18px 18px}.party-fields{grid-template-columns:1fr}.parchment{padding:28px 19px}.oath-signature{grid-template-columns:1fr;gap:5px}.signature-actions{justify-content:center}.oath{padding:0;font-size:23px}.article p{font-size:18px}}
+    @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+    body.minimal-motion *,body.minimal-motion *::before,body.minimal-motion *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+    @media print{
+      @page{size:A4;margin:12mm}
+      body{background:#fff!important;color:#222!important}body::before{display:none}
+      .toolbar,.stage-intro,.stage-scroll,.contract-header,.side-panel,.signature-actions,.sig-error,.footer-note,.splash,.finished-actions,.signature-hint{display:none!important}
+      .stage,.stage-contract{display:block!important;min-height:auto!important;padding:0!important;margin:0!important}
+      .stage-intro,.stage-scroll{display:none!important}
+      .contract-wrap{display:block!important;max-width:none!important;margin:0!important}
+      .parchment{padding:12mm!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fffaf0!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+      .article,.counterpart{break-inside:avoid;page-break-inside:avoid;padding:10px 0 8px}
+      .article p{font-size:16px}.article h3{font-size:19px}.doc-title{font-size:40px}.doc-intro{font-size:17px}.doc-epilogue{font-size:16px}.signature-area{break-inside:avoid}
+      .party-fields input{border:0;border-bottom:1px solid #bbb;background:transparent}
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar"><button id="motionBtn" class="tool-btn" type="button" aria-pressed="false" title="Réduit tous les effets de mouvement">✦ Animations douces : ON</button></div>
+
+  <section class="stage stage-intro active" id="intro" aria-labelledby="intro-title">
+    <div class="intro-frame">
+      <div class="eyebrow">Bureau des affaires amoureuses hautement suspectes</div>
+      <div class="sigil" id="sigil" aria-hidden="true"><span class="wand">🪄</span><div class="spell-wave"></div></div>
+      <h1 class="intro-title" id="intro-title">Le Pacte des<br><em>Intentions</em><br>Scandaleuses</h1>
+      <p class="intro-copy">Il paraît que ce sortilège ouvre des archives auxquelles même le Ministère de la Magie refuse d’être associé. L’affaire exige une signature. Et quelques mauvaises intentions.</p>
+      <button id="castBtn" class="button-main" type="button">✧ Prononcer le sortilège</button><audio id="spellAudio" preload="none"><source src="audio/enculus-vibrato.mp3" type="audio/mpeg"><source src="audio/enculus-vibrato.wav" type="audio/wav"></audio>
+      <div class="spell-text" id="spellText" aria-live="polite">Enculus Vibrato !</div><p class="voice-hint" id="voiceHint" role="status" aria-live="polite"></p>
+      <p class="intro-foot">Aucun flash ni stroboscope. Ton propre enregistrement du sort peut être ajouté au dossier audio.</p>
+    </div>
+  </section>
+
+  <section class="stage stage-scroll" id="scrollStage" aria-labelledby="scroll-title">
+    <div class="scene-frame">
+      <div class="eyebrow">Le sortilège a fonctionné</div>
+      <div class="scroll-illustration" role="img" aria-label="Parchemin ancien replié, fermé par un ruban bordeaux et un sceau doré">
+        <div class="scroll-core"></div><div class="scroll-roll left"></div><div class="scroll-roll right"></div><div class="scroll-ribbon"></div>
+      </div>
+      <h2 class="scene-title" id="scroll-title">Un pacte vous attend.</h2>
+      <p class="scene-copy">Attention : le Ministère des Bonnes Manières a demandé la destruction immédiate du document. <br><strong>Souhaitez-vous ouvrir le contrat ?</strong></p>
+      <button id="openBtn" class="button-main" type="button">✧ Ouvrir le contrat</button>
+      <p class="intro-foot">La musique est lancée à l’ouverture lorsque YouTube et le navigateur le permettent.</p>
+    </div>
+  </section>
+
+  <section class="stage stage-contract" id="contractStage" aria-labelledby="contract-title">
+    <main class="contract-wrap">
+      <header class="contract-header"><div class="eyebrow">Archives secrètes • Département des pactes amoureux</div><h2 id="contract-title">Le Contrat des Mauvaises Intentions</h2><p>Rédigé avec une rigueur administrative parfaitement disproportionnée.</p></header>
+
+      <article class="parchment" id="printableDocument">
+        <div class="doc-flourish" aria-hidden="true">❦ ✧ ❦</div>
+        <div class="doc-label">Document strictement confidentiel • Dossier n° 69</div>
+        <h2 class="doc-title">Pacte d'Amour<br>&amp; de Débauche<br>Délicieusement Assumée</h2>
+        <div class="doc-subtitle">Contrat hautement indécent • Service des pratiques non homologuées</div>
+        <div class="doc-rule"></div>
+        <div class="party-fields">
+          <label>Prénom de la signataire<input id="signerName" type="text" maxlength="45" autocomplete="given-name" placeholder="Son doux prénom" required></label>
+          <label>Prénom du complice<input id="partnerName" type="text" maxlength="45" placeholder="Ton prénom" required></label>
+        </div>
+        <p class="doc-intro">Moi, <span data-signer>l'Élue</span>, parfaitement consciente du degré de débilité de ce document, déclare conclure avec <span data-partner>mon Complice</span> un pacte d’amour éternel, de tentations indécentes et d’incorrigibles mauvaises intentions. Le Ministère nie toute participation.</p>
+
+
+        <section class="article"><h3>Article I · L'amour à perpétuité</h3><p>Je déclare vouloir aimer <span data-partner>mon Complice</span> <span class="bold-term">toute ma vie, sans concession, sans condition</span>, avec un supplément illimité de baisers, d'attention et de regards qui veulent dire beaucoup trop de choses. Les vols de couette restent toutefois passibles de représailles affectueuses.</p></section>
+        <section class="article"><h3>Article II · L'exclusivité des délices</h3><p>J'ai l'intention de réserver à <span data-partner>mon Complice</span> mes baisers les plus ardents, mes déclarations les moins raisonnables et mes envies de <span class="bold-term">faire l'amour encore, encore et encore</span>, dans l'espoir scandaleux de ne jamais m'en lasser.</p></section>
+        <section class="article"><h3>Article III · Réveils indécents et matins mal élevés</h3><p>Dans le grand théâtre de nos fantasmes, <span class="bold-term">j’autorise mon Complice à me réveiller par tout acte sexuel de sa volonté</span>, y compris avant que mon cerveau soit capable de différencier un lundi d’un samedi. Le réveil-matin ordinaire est officiellement licencié.</p></section>
+        <section class="article"><h3>Article IV · De l'acte suspect en position penchée</h3><p>Chaque fois que je me penche, cela peut devenir, dans nos jeux partagés, le signal pour que <span data-partner>mon Complice</span> s’approche et s’insère en moi lors d’un <span class="bold-term">acte hautement suspect</span>. Pas une « proposition suspecte » : un <em>acte</em> suspect, lorsque l’envie est partagée. Les meubles témoins de cette indiscipline n’ont absolument rien demandé et ne pourront pas porter plainte auprès du Ministère.</p></section>
+        <section class="article"><h3>Article V · Du sortilège « Enculus Vibrato »</h3><p>Lorsque l'un de nous prononce <span class="bold-term">« Enculus Vibrato ! »</span>, la traduction officielle est : <span class="bold-term">« Direction sous la couette. Immédiatement. »</span> Les effets secondaires possibles incluent les fesses rouges, des douleurs entre les jambes et une fâcheuse tendance à oublier pourquoi on était entrés dans la chambre. Le service des urgences du Ministère ne traite pas ce genre de magie.</p></section>
+        <section class="article"><h3>Article VI · Des sanctions pour excès de sagesse</h3><p>Toute période prolongée de sagesse indécente déclenchera une audience devant le Tribunal des Mauvaises Intentions. Parmi les sentences envisagées par ce tribunal parfaitement corrompu figurent les mentions <span class="bold-term">« avaler »</span> et <span class="bold-term">« faciale »</span>. La peine pourra être doublée sur simple fou rire. Le juge est prié de ne pas demander de preuves photographiques.</p></section>
+        <section class="article"><h3>Article VII · Durée du pacte</h3><p>Notre ambition amoureuse est de durer <span class="bold-term">toute une vie</span>. Quant à nos fantaisies, elles restent le terrain de jeu de deux complices qui en ont envie, aujourd'hui comme demain. Le Ministère des Bonnes Manières renonce définitivement à comprendre notre dossier.</p></section>
+
+        <section class="counterpart"><div class="counterpart-label">EN CONTREPARTIE • ENGAGEMENT DU COMPLICE</div><p>« Mon complice s'engage à m'aimer de tout son coeur le restant de ma vie, et à me baiser comme une salope. »</p><small>Le Ministère a refusé de tamponner ce paragraphe. Nous l'avons conservé.</small></section>
+
+        <p class="doc-epilogue">Fait avec une quantité déraisonnable d'amour, une évidente absence de pudeur administrative et beaucoup, beaucoup de mauvaises intentions.</p>
+        <section class="signature-area" aria-labelledby="signatureTitle">
+          <h3 class="signature-title" id="signatureTitle">Le Serment Final</h3>
+          <div class="oath-signature">
+            <p class="oath">« Je jure solennellement que mes intentions sont mauvaises. »</p>
+            <div class="signature-box">
+              <canvas id="signatureCanvas" width="660" height="266" role="img" aria-label="Zone de signature manuscrite. Dessinez avec le doigt ou la souris." tabindex="0"></canvas>
+              <img id="signatureImage" alt="Signature manuscrite de la signataire">
+              <p class="signature-hint" id="signatureHint">Signez ici, au doigt ou à la souris ✍</p>
+            </div>
+          </div>
+          <div class="signature-actions" id="signActions"><button type="button" id="clearBtn" class="btn-clear">Effacer la signature</button><button type="button" id="signBtn" class="btn-ink">✧ Sceller le pacte</button></div>
+          <p id="signatureError" class="sig-error" role="alert" aria-live="polite"></p>
+          <div id="sealedStamp" class="sealed-stamp" aria-label="Pacte scellé">Pacte<br>scellé</div>
+          <div id="afterToast" class="after-toast" role="status">Le Ministère confirme : la décence a définitivement quitté les lieux.</div>
+          <div class="date-line">Le <span id="todayDate"></span><span id="signedDate"></span></div>
+        </section>
+      </article>
+
+      <aside class="side-panel" aria-label="Musique et options du pacte">
+        <div class="side-card"><div class="eyebrow">Bande originale</div><h3>Votre musique, votre magie</h3><p>YouTube démarre à l’ouverture si la page est hébergée sur un site. Pour un fichier HTML ouvert directement, utilise une piste locale facultative ou le lien YouTube.</p><div id="musicContainer" aria-label="Lecteur YouTube ou conseils d’écoute"></div><button type="button" id="localMusicBtn" class="music-option" aria-pressed="false">♫ Essayer la musique locale (audio/musique.mp3)</button><audio id="musicLocal" preload="none" loop src="audio/musique.mp3"></audio><a class="music-link" href="https://www.youtube.com/watch?v=3tAJeLNZ62M" target="_blank" rel="noopener noreferrer">Écouter directement sur YouTube ↗</a></div>
+        <div class="side-card"><div class="side-badge"><span aria-hidden="true">✧</span><span>Deux complices, une signature, un Ministère outré. Aucun compte, aucune donnée du formulaire envoyée à un serveur.</span></div></div>
+        <div class="side-card finished-actions" id="finishedActions"><div class="eyebrow">Pacte signé</div><h3>Et voilà, c'est scellé.</h3><p>Conservez votre chef-d'œuvre administratif sur votre téléphone.</p><button type="button" id="printBtn" class="button-main">↓ Enregistrer en PDF</button><button type="button" id="restartBtn" class="tool-btn">↺ Recommencer</button></div>
+      </aside>
+    </main>
+    <footer class="footer-note">Un pacte de fiction pour jouer à être ridiculement amoureux. La magie, les serments et l'administration des sortilèges n'ont aucune valeur légale.</footer>
+  </section>
+
+  <div id="splash" class="splash" aria-hidden="true">
+    <svg viewBox="0 0 720 580" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- A deliberately soft, cream-colored, comic-book ink blot. No photos, faces, flashing or harsh color changes. -->
+      <g fill="#e6dfd4">
+        <path d="M353 102c32 11 40 70 65 79 28 9 73-33 96-12 21 19-6 72 12 95 17 23 91 13 100 43 9 30-59 53-69 78-11 27 34 65 16 87-18 23-80-7-104 11-27 21-14 75-45 83-30 9-54-41-83-47-33-5-65 47-93 27-25-17-10-70-32-89-23-20-81 3-92-27-12-28 41-61 43-89 3-32-53-53-45-82 7-29 71-23 89-47 19-25-13-71 11-90 23-18 75 22 103 14 29-8 28-65 58-65Z"/>
+        <ellipse cx="140" cy="120" rx="16" ry="21" transform="rotate(-30 140 120)"/>
+        <ellipse cx="597" cy="142" rx="21" ry="13" transform="rotate(25 597 142)"/>
+        <ellipse cx="620" cy="486" rx="14" ry="18"/>
+        <ellipse cx="132" cy="458" rx="11" ry="14"/>
+        <ellipse cx="347" cy="37" rx="13" ry="20"/>
+        <ellipse cx="540" cy="60" rx="7" ry="12"/>
+        <ellipse cx="76" cy="303" rx="8" ry="13" transform="rotate(20 76 303)"/>
+        <ellipse cx="676" cy="352" rx="8" ry="11"/>
+      </g>
+      <g fill="#f5efe4" opacity=".66"><ellipse cx="260" cy="215" rx="36" ry="15" transform="rotate(-24 260 215)"/><ellipse cx="479" cy="388" rx="23" ry="8" transform="rotate(-25 479 388)"/></g>
+    </svg>
+    <div class="splash-label">Oups… sortilège mal calibré !</div>
+  </div>
+
+  <script>
+  (() => {
+    'use strict';
+    const $ = id => document.getElementById(id);
+    const stages = ['intro','scrollStage','contractStage'];
+    const showStage = id => {
+      for(const name of stages){ const el=$(name); const active = name === id; el.classList.toggle('active', active); el.setAttribute('aria-hidden', String(!active)); }
+      window.scrollTo({top:0,behavior:'instant'});
+    };
+    const shortName = (str, fallback) => (str.trim().slice(0,45) || fallback);
+    const updateNames = () => {
+      const signer=shortName($('signerName').value,'l’Élue');
+      const partner=shortName($('partnerName').value,'mon Complice');
+      document.querySelectorAll('[data-signer]').forEach(el=>el.textContent=signer);
+      document.querySelectorAll('[data-partner]').forEach(el=>el.textContent=partner);
+    };
+    $('signerName').addEventListener('input',updateNames);
+    $('partnerName').addEventListener('input',updateNames);
+    $('todayDate').textContent = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric'}).format(new Date());
+
+    const motionBtn=$('motionBtn');
+    motionBtn.addEventListener('click',()=>{
+      const on = document.body.classList.toggle('minimal-motion');
+      motionBtn.setAttribute('aria-pressed',String(on));
+      motionBtn.textContent=on?'✦ Animations minimales : ON':'✦ Animations douces : ON';
+    });
+
+    // Le vocal personnalisé est prioritaire. Sans fichier, on utilise la voix du navigateur.
+    let spellFallbackUsed=false;
+    function saySpell(){
+      if(spellFallbackUsed)return;
+      spellFallbackUsed=true;
+      if(!('speechSynthesis' in window)){
+        $('voiceHint').textContent='Ajoute ton vocal dans audio/enculus-vibrato.mp3 pour entendre le sort.';
+        return;
+      }
+      const voice=new SpeechSynthesisUtterance('Enculus Vibrato !');
+      voice.lang='fr-FR';voice.rate=.85;voice.pitch=.8;voice.volume=.75;
+      const french=window.speechSynthesis.getVoices().find(v=>v.lang.toLowerCase().startsWith('fr'));
+      if(french) voice.voice=french;
+      window.speechSynthesis.cancel();window.speechSynthesis.speak(voice);
+      $('voiceHint').textContent='Voix de synthèse : remplace-la par ton propre enregistrement dans le dossier audio.';
+    }
+    let castLock=false;
+    $('castBtn').addEventListener('click',()=>{
+      if(castLock)return;castLock=true;$('castBtn').disabled=true;
+      $('sigil').classList.add('casting');$('spellText').classList.add('revealed');
+      const audio=$('spellAudio');
+      audio.addEventListener('error',saySpell,{once:true});
+      const attempt=audio.play();
+      if(attempt && typeof attempt.catch === 'function') attempt.catch(saySpell);
+      window.setTimeout(()=>showStage('scrollStage'), document.body.classList.contains('minimal-motion')?650:1700);
+    });
+
+    // YouTube requiert un HTTP Referer : un fichier file:// ne permet pas cela.
+    let musicLoaded=false;
+    $('openBtn').addEventListener('click',()=>{
+      showStage('contractStage');
+      if(musicLoaded)return;
+      musicLoaded=true;
+      if(location.protocol==='file:'){
+        const help=document.createElement('div');help.className='music-status';
+        help.innerHTML='⚠️ En ouvrant directement ce fichier HTML, YouTube peut afficher l’erreur 153. Pour écouter la musique <strong>dans</strong> le contrat, publie le projet sur GitHub Pages ou lance un serveur local. Tu peux aussi placer ton MP3 dans <code>audio/musique.mp3</code>, puis utiliser le bouton ci-dessous.';
+        $('musicContainer').append(help);
+        return;
+      }
+      const frame=document.createElement('iframe');frame.className='music-frame';
+      frame.title='Musique YouTube du pacte';frame.loading='eager';
+      frame.allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share';
+      frame.referrerPolicy='strict-origin-when-cross-origin';
+      const params=new URLSearchParams({autoplay:'1',playsinline:'1',rel:'0',origin:location.origin});
+      frame.src='https://www.youtube.com/embed/3tAJeLNZ62M?'+params.toString();
+      frame.setAttribute('allowfullscreen','');
+      $('musicContainer').append(frame);
+      const info=document.createElement('p');info.className='music-hint';
+      info.textContent='Si YouTube bloque le lancement automatique, appuie sur Lecture dans le lecteur.';
+      $('musicContainer').append(info);
+    });
+    let localMusicPlaying=false;
+    $('localMusicBtn').addEventListener('click',()=>{
+      const audio=$('musicLocal');
+      if(localMusicPlaying){audio.pause();localMusicPlaying=false;$('localMusicBtn').textContent='♫ Reprendre la musique locale';return;}
+      const attempt=audio.play();
+      if(attempt && typeof attempt.then==='function'){
+        attempt.then(()=>{localMusicPlaying=true;$('localMusicBtn').textContent='Ⅱ Mettre la musique locale en pause';}).catch(()=>{
+          $('localMusicBtn').textContent='⚠️ Fichier introuvable : ajoute audio/musique.mp3';
+        });
+      }
+    });
+
+    const canvas=$('signatureCanvas');
+    const ctx=canvas.getContext('2d');
+    ctx.strokeStyle='#51283b';ctx.lineWidth=3.3;ctx.lineJoin='round';ctx.lineCap='round';
+    let drawing=false, hasInk=false, last=null, signed=false;
+    const coords=e=>{
+      const rect=canvas.getBoundingClientRect();
+      return {x:(e.clientX-rect.left)*canvas.width/rect.width,y:(e.clientY-rect.top)*canvas.height/rect.height};
+    };
+    canvas.addEventListener('pointerdown',e=>{
+      if(signed)return; e.preventDefault();canvas.setPointerCapture(e.pointerId);drawing=true;last=coords(e);
+      ctx.beginPath();ctx.arc(last.x,last.y,1.75,0,Math.PI*2);ctx.fillStyle='#51283b';ctx.fill();hasInk=true;
+    });
+    canvas.addEventListener('pointermove',e=>{
+      if(!drawing||signed)return;e.preventDefault();const p=coords(e);ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();last=p;
+    });
+    const endStroke=()=>{drawing=false;last=null;};
+    canvas.addEventListener('pointerup',endStroke);canvas.addEventListener('pointercancel',endStroke);canvas.addEventListener('lostpointercapture',endStroke);
+    $('clearBtn').addEventListener('click',()=>{if(signed)return;ctx.clearRect(0,0,canvas.width,canvas.height);hasInk=false;$('signatureError').textContent='';});
+
+    const finishSigning=()=>{
+      $('signatureImage').src=canvas.toDataURL('image/png');
+      $('signatureImage').style.display='block';canvas.style.display='none';
+      $('signatureHint').textContent='Signature enregistrée sur ce document';
+      $('signActions').classList.add('signed');$('sealedStamp').classList.add('visible');
+      $('afterToast').classList.add('visible');$('finishedActions').classList.add('visible');
+      $('signerName').readOnly=true;$('partnerName').readOnly=true;
+      const stamp=new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit'}).format(new Date());
+      $('signedDate').textContent=' · à '+stamp;
+    };
+    $('signBtn').addEventListener('click',()=>{
+      if(signed)return;
+      const err=$('signatureError');
+      if(!$('signerName').value.trim()||!$('partnerName').value.trim()){err.textContent='Les deux prénoms doivent être renseignés avant de sceller le pacte.';return;}
+      if(!hasInk){err.textContent='Il manque ton chef-d’œuvre : signe dans le cadre, au doigt ou à la souris.';return;}
+      err.textContent='';signed=true;finishSigning();
+      const splash=$('splash');splash.classList.add('visible');
+      window.setTimeout(()=>splash.classList.remove('visible'),2650);
+    });
+    $('printBtn').addEventListener('click',()=>window.print());
+    $('restartBtn').addEventListener('click',()=>window.location.reload());
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+DOSSIER AUDIO DU PACTE
+=====================
+
+1. VOIX DU SORT : enregistre ta voix prononçant « Enculus Vibrato ! ».
+   Dépose un fichier avec exactement ce nom : enculus-vibrato.mp3
+   Autre format possible : enculus-vibrato.wav
+   (Si aucun fichier n'est présent, le navigateur essaie de prononcer le sort.)
+
+2. MUSIQUE LOCALE FACULTATIVE : ajoute un fichier audio que tu as le droit
+   d'utiliser, nommé musique.mp3. Dans le contrat, clique sur le bouton
+   « Essayer la musique locale ». Cela marche même sans YouTube.
+
+Attention : ne déplace pas index.html tout seul si tu veux utiliser les
+fichiers audio ; conserve ce dossier audio juste à côté.
